@@ -1,46 +1,40 @@
 class Api::V1::UsersController < ApplicationController
-    
+    skip_before_action :authorized
+
     def create
         auth_params = SpotifyApiAdapter.login(params[:code])
         user_data = SpotifyApiAdapter.getUserData(auth_params["access_token"])
-        recent_tracks = SpotifyApiAdapter.get_recently_played_tracks(auth_params["access_token"])
-        top_artists = SpotifyApiAdapter.get_user_top_artists(auth_params["access_token"])
         # byebug 
-
+        
         user = User.find_or_create_by(user_params(user_data))
         img_url = user_data["images"][0] ? user_data["images"][0]["url"] : nil
         
-        encodedAccess = issue_token({token: auth_params["access_token"]})
-        encodedRefresh = issue_token({token: auth_params["refresh_token"]})
+        recent_tracks = SpotifyApiAdapter.get_recently_played_tracks(auth_params["access_token"])
+        top_artists = SpotifyApiAdapter.get_user_top_artists(auth_params["access_token"])
+        playlists = SpotifyApiAdapter.get_user_playlists(auth_params["access_token"])
+        # current_song = SpotifyApiAdapter.get_user_currently_playing(auth_params["access_token"])
+        # reccos = SpotifyApiAdapter.get_user_reccomendations(auth_params["access_token"])
+        
+        # byebug
+        #encodedAccess = issue_token({token: auth_params["access_token"]})
+        #encodedRefresh = issue_token({token: auth_params["refresh_token"]})
+        
+        payload = {user_id: user.id}
+        token = issue_token(payload)
+        
+        
+        user.update(profile_img_url: img_url, access_token: auth_params["access_token"], refresh_token: auth_params["refresh_token"])
+        render json: {recent_tracks: recent_tracks, top_artists: top_artists, playlists: playlists, auth_response_json: auth_response_json(user, token)}
+        # if user.valid?
+        #     # render json: auth_response_json(user, token) # see application_controller.rb
+        # else
+        #     render json: { errors: user.errors.full_messages }
+        # end 
+        # byebug
 
-        # payload = {user_id: user.id}
-        # token = issue_token(payload)
-        # jwt: token
-
-        user.update(profile_img_url: img_url, access_token: encodedAccess, refresh_token: encodedRefresh)
-
-        # render json: recent_tracks
-        render json: user.to_json(:except => [:access_token, :refresh_token, :created_at, :updated_at])
-        # payload = {user_id: user.id}
-        # token = issue_token(payload)
-        # render json: {jwt: token, user}#: {
-        #                         #email: user.email,
-        #                         #display_name: user.display_name,
-        #                         #spotify_url: user.spotify_url,
-        #                         #profile_img_url: user.profile_img_url
-        #                         #}
-        #                       #}
+        # render json: user.to_json(:except => [:access_token, :refresh_token, :created_at, :updated_at])
     end
 
-    # def recent_tracks
-    #     auth_params = SpotifyApiAdapter.login(params[:code])
-    #     # user_data = SpotifyApiAdapter.getUserData(auth_params["access_token"])
-    #     recent_tracks = SpotifyApiAdapter.getRecentlyPlayedTracks(auth_params["access_token"])
-    #     byebug
-    #     render json: recent_tracks
-    # end
-    
-    
     private
     
     def user_params(user_data)

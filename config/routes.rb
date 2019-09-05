@@ -27,11 +27,15 @@ Rails.application.routes.draw do
       get 'auth', to: "sessions#create"
       post 'login', to: "users#create"
 
+      # resources :users, only: :create
+
       resources :playlists
+      get "playlists", to: "playlists#user_playlists"
 
       # get 'recent_tracks', to: "users#recent_tracks"
       resources :songs
       get "recent", to: "songs#recent_songs"
+      get "topArtists", to: "songs#top_artists"
 
       resources :playlist_songs
 

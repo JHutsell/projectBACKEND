@@ -5,7 +5,10 @@ class SpotifyApiAdapter
             "auth" => "https://accounts.spotify.com/api/token",
             "me" => "https://api.spotify.com/v1/me",
             "recent_tracks" => "https://api.spotify.com/v1/me/player/recently-played",
-            "top_artists" => "https://api.spotify.com/v1/me/top/artists/"
+            "top_artists" => "https://api.spotify.com/v1/me/top/artists/",
+            "playlists" => "https://api.spotify.com/v1/me/playlists",
+            "currently_playing" => "https://api.spotify.com/v1/me/player",
+            "reccomendations" => "https://api.spotify.com/v1/recommendations"
         }
     end
 
@@ -92,6 +95,9 @@ class SpotifyApiAdapter
 
 
     def self.get_recently_played_tracks(access_token)
+
+        # user.refresh_access_token
+
         header = {
             "Authorization": "Bearer #{access_token}"
         }
@@ -108,8 +114,41 @@ class SpotifyApiAdapter
         }
 
         top_artists = RestClient.get(urls["top_artists"], header)
-        response = JSON.parse(top_artists)
+        response = JSON.parse(top_artists.body)
         response["items"]
+    end
+
+    def self.get_user_playlists(access_token)
+        header = {
+            "Authorization": "Bearer #{access_token}"
+        }
+
+        playlists = RestClient.get(urls["playlists"], header)
+        response = JSON.parse(playlists.body)
+        response["items"]
+    end
+
+    # def self.get_user_reccomendations(access_token)
+    #     header = {
+    #         "Authorization": "Bearer #{access_token}"
+    #     }
+
+    #     reccomendations = RestClient.get(urls["reccomendations"], header)
+    #     byebug
+    #     response = JSON.parse(reccomendations.body)
+    #     response["items"]
+    # end
+
+    def self.get_user_currently_playing(access_token)
+        header = {
+            "Authorization": "Bearer #{access_token}"
+        }
+
+        current_song = RestClient.get(urls["currently_playing"], header)
+        byebug
+        current_song_json = current_song.to_json
+        response = JSON.parse(current_song_json.body)
+        response
     end
 
 

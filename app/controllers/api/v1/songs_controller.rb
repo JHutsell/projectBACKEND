@@ -9,9 +9,14 @@ class Api::V1::SongsController < ApplicationController
         # auth_params = SpotifyApiAdapter.login(params[:code])
         # recent_songs_data = SpotifyApiAdapter.get_recently_played_tracks(auth_params["access_token"])
 
-        recent_songs_data = SpotifyApiAdapter.get_recently_played_tracks(current_user)
-        byebug
+        recent_songs_data = SpotifyApiAdapter.get_recently_played_tracks(current_user.access_token)
+        # byebug
         render json: recent_songs_data
+    end
+
+    def top_artists
+        top_artists_data = SpotifyApiAdapter.get_user_top_artists(current_user.access_token)
+        render json: top_artists_data
     end
 
 end
