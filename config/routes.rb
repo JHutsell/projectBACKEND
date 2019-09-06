@@ -29,8 +29,8 @@ Rails.application.routes.draw do
 
       # resources :users, only: :create
 
-      resources :playlists
-      get "playlists", to: "playlists#user_playlists"
+      # resources :playlists
+      get "userPlaylists", to: "playlists#user_playlists"
 
       # get 'recent_tracks', to: "users#recent_tracks"
       resources :songs
