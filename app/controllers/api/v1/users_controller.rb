@@ -35,6 +35,11 @@ class Api::V1::UsersController < ApplicationController
         # render json: user.to_json(:except => [:access_token, :refresh_token, :created_at, :updated_at])
     end
 
+    def index
+        @users = User.all 
+        render json: @users
+    end
+
     def addFriend
         user1 = User.find(params[:follower])
         user2 = User.find(params[:following])
