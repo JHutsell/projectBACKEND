@@ -7,8 +7,9 @@ class SpotifyApiAdapter
             "recent_tracks" => "https://api.spotify.com/v1/me/player/recently-played",
             "top_artists" => "https://api.spotify.com/v1/me/top/artists/",
             "playlists" => "https://api.spotify.com/v1/me/playlists",
-            "currently_playing" => "https://api.spotify.com/v1/me/player",
-            "reccomendations" => "https://api.spotify.com/v1/recommendations"
+            "currently_playing" => "https://api.spotify.com/v1/me/player/currently-playing",
+            "reccomendations" => "https://api.spotify.com/v1/recommendations",
+            "search" => "https://api.spotify.com/v1/search?q="
         }
     end
 
@@ -145,9 +146,21 @@ class SpotifyApiAdapter
         }
 
         current_song = RestClient.get(urls["currently_playing"], header)
-        byebug
+        # byebug
         current_song_json = current_song.to_json
-        response = JSON.parse(current_song_json.body)
+        response = JSON.parse(current_song.body)
+        response
+    end
+
+    def self.get_search_song(access_token, term)
+        header = {
+            "Authorization": "Bearer #{access_token}"
+        }
+
+        search_url = urls["search"] + term
+
+        song = RestClient.get(search_url, header)
+        response = JSON.parse(song.body)
         response
     end
 

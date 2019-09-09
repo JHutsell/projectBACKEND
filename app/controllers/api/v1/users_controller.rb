@@ -35,6 +35,20 @@ class Api::V1::UsersController < ApplicationController
         # render json: user.to_json(:except => [:access_token, :refresh_token, :created_at, :updated_at])
     end
 
+    def addFriend
+        user1 = User.find(params[:follower])
+        user2 = User.find(params[:following])
+        user2.followers << user1
+        render json: {added:true}
+    end
+
+    def deleteFriend
+        user1 = User.find(params[:follower])
+        user2 = User.find(params[:following])
+        user2.followers.delete(user1)
+        render json: {added:false}
+    end
+
     private
     
     def user_params(user_data)

@@ -30,12 +30,18 @@ Rails.application.routes.draw do
       # resources :users, only: :create
 
       # resources :playlists
-      get "userPlaylists", to: "playlists#user_playlists"
+      get 'userPlaylists', to: "playlists#user_playlists"
 
       # get 'recent_tracks', to: "users#recent_tracks"
       resources :songs
-      get "recent", to: "songs#recent_songs"
-      get "topArtists", to: "songs#top_artists"
+      get 'recent', to: "songs#recent_songs"
+      get 'topArtists', to: "songs#top_artists"
+      get 'currentSong', to: "songs#current_song"
+      post '/getSong/:term', to: "songs#searched_song"
+
+      resources :follows
+      get '/friends/:id', to: "follows#friends"
+
 
       resources :playlist_songs
 
