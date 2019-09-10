@@ -38,6 +38,7 @@ Rails.application.routes.draw do
       get 'topArtists', to: "songs#top_artists"
       get 'currentSong', to: "songs#current_song"
       post '/getSong/:term', to: "songs#searched_song"
+      post '/postSong/:playlist_id/:song_uri', to: "songs#add_song_to_playlist"
 
       resources :follows
       get '/friends/:id', to: "follows#friends"

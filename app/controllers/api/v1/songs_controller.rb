@@ -1,5 +1,7 @@
 class Api::V1::SongsController < ApplicationController
 
+    skip_before_action :authorized
+
     def index 
         @songs = current_user.songs
         render json: @songs
@@ -27,6 +29,11 @@ class Api::V1::SongsController < ApplicationController
     def searched_song
         searched_song_data = SpotifyApiAdapter.get_search_song(current_user.access_token, params[:term])
         render json: searched_song_data
+    end
+
+    def add_song_to_playlist
+        post_list = SpotifyApiAdapter.add_song_to_playlist(current_user.access_token, params[:playlist_id], params[:song_uri])
+        render json: post_list
     end
 
 end

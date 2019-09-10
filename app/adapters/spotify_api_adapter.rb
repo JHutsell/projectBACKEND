@@ -9,7 +9,8 @@ class SpotifyApiAdapter
             "playlists" => "https://api.spotify.com/v1/me/playlists",
             "currently_playing" => "https://api.spotify.com/v1/me/player/currently-playing",
             "reccomendations" => "https://api.spotify.com/v1/recommendations",
-            "search" => "https://api.spotify.com/v1/search?q="
+            "search" => "https://api.spotify.com/v1/search?q=",
+            "add_to_playlist" => "https://api.spotify.com/v1/playlists/"
         }
     end
 
@@ -91,8 +92,6 @@ class SpotifyApiAdapter
         }
 
         current_song = RestClient.get(urls["currently_playing"], header)
-        # byebug
-        current_song_json = current_song.to_json
         response = JSON.parse(current_song.body)
         response
     end
@@ -102,14 +101,39 @@ class SpotifyApiAdapter
             "Authorization": "Bearer #{access_token}"
         }
 
-        # https://api.spotify.com/v1/search?q=
         # "https://api.spotify.com/v1/search?q=abba&type=track&market=US"
 
-        searchedd = urls["search"] + term + "&type=track"
-        song = RestClient.get(searchedd, header)
+        searched = urls["search"] + term + "&type=track"
+        song = RestClient.get(searched, header)
         response = JSON.parse(song.body)
         response
     end
 
+    def self.add_song_to_playlist(access_token, playlist_id, song_uri)
+        require 'uri'
+        require 'net/http'
+
+        string = "https://api.spotify.com/v1/playlists/" + playlist_id + "/tracks?uris=spotify%3Atrack%3A" + song_uri
+        url = URI(string)
+        # byebug
+        http = Net::HTTP.new(url.host, url.port)
+        http.use_ssl = true
+        
+        request = Net::HTTP::Post.new(url)
+        request["Authorization"] = "Bearer #{access_token}"
+        request["Accept"] = 'application/json'
+        # request["User-Agent"] = 'PostmanRuntime/7.16.3'
+        # request["Cache-Control"] = 'no-cache'
+        # request["Postman-Token"] = '617fcab3-bb41-485f-af3d-be890bd10c3c,4794609a-d835-4f31-a576-1a0eebc7777e'
+        request["Host"] = 'api.spotify.com'
+        request["Accept-Encoding"] = 'gzip, deflate'
+        # request["Cookie"] = 'sp_ab=%7B%7D; sp_t=43c8692abd99f7abcab87cee9b998f7f'
+        # request["Content-Length"] = ''
+        # request["Connection"] = 'keep-alive'
+        # request["cache-control"] = 'no-cache'
+        
+        response = http.request(request)
+        puts response.read_body
+    end
 
 end
