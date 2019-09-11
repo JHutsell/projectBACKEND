@@ -24,7 +24,7 @@ class Api::V1::UsersController < ApplicationController
         
         
         user.update(profile_img_url: img_url, access_token: auth_params["access_token"], refresh_token: auth_params["refresh_token"])
-        byebug
+        # byebug
         render json: {recent_tracks: recent_tracks, top_artists: top_artists, playlists: playlists, auth_response_json: auth_response_json(user, token)}
         # if user.valid?
         #     # render json: auth_response_json(user, token) # see application_controller.rb

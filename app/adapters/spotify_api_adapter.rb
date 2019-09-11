@@ -8,7 +8,7 @@ class SpotifyApiAdapter
             "top_artists" => "https://api.spotify.com/v1/me/top/artists/",
             "playlists" => "https://api.spotify.com/v1/me/playlists",
             "currently_playing" => "https://api.spotify.com/v1/me/player/currently-playing",
-            "reccomendations" => "https://api.spotify.com/v1/recommendations",
+            "reccomendations" => "https://api.spotify.com/v1/recommendations?seed_tracks=",
             "search" => "https://api.spotify.com/v1/search?q=",
             "add_to_playlist" => "https://api.spotify.com/v1/playlists/"
         }
@@ -75,16 +75,17 @@ class SpotifyApiAdapter
         response["items"]
     end
 
-    # def self.get_user_reccomendations(access_token)
-    #     header = {
-    #         "Authorization": "Bearer #{access_token}"
-    #     }
+    def self.get_user_reccomendations(access_token, song_1, song_2, song_3, song_4, song_5)
+        header = {
+            "Authorization": "Bearer #{access_token}"
+        }
 
-    #     reccomendations = RestClient.get(urls["reccomendations"], header)
-    #     byebug
-    #     response = JSON.parse(reccomendations.body)
-    #     response["items"]
-    # end
+        recco_url = urls["reccomendations"] + song_1 + "&seed_tracks= " + song_2 + "&seed_tracks= " + song_3 + "&seed_tracks= " + song_4 + "&seed_tracks= " + song_5
+
+        reccomendations = RestClient.get(recco_url, header)
+        response = JSON.parse(reccomendations.body)
+        response["tracks"]
+    end
 
     def self.get_user_currently_playing(access_token)
         header = {

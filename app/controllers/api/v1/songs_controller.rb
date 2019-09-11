@@ -8,11 +8,7 @@ class Api::V1::SongsController < ApplicationController
     end
 
     def recent_songs
-        # auth_params = SpotifyApiAdapter.login(params[:code])
-        # recent_songs_data = SpotifyApiAdapter.get_recently_played_tracks(auth_params["access_token"])
-
         recent_songs_data = SpotifyApiAdapter.get_recently_played_tracks(current_user.access_token)
-        # byebug
         render json: recent_songs_data
     end
 
@@ -35,5 +31,12 @@ class Api::V1::SongsController < ApplicationController
         post_list = SpotifyApiAdapter.add_song_to_playlist(current_user.access_token, params[:playlist_id], params[:song_uri])
         render json: post_list
     end
+
+    def get_song_recommendations
+        recco_list = SpotifyApiAdapter.get_user_reccomendations(current_user.access_token, params[:song_1], params[:song_2], params[:song_3], params[:song_4], params[:song_5])
+        render json: recco_list
+    end
+
+
 
 end
