@@ -137,4 +137,44 @@ class SpotifyApiAdapter
         puts response.read_body
     end
 
+    # def self.create_new_user_playlist(access_token, user_id, payload)
+    #     header = {
+    #         "Authorization": "Bearer #{access_token}"
+    #     }
+
+    #     url = `https://api.spotify.com/v1/users/#{user_id}/playlists`
+    #     playlist = RestClient.post(url, payload, header)
+    #     response = JSON.parse(playlist.body)
+    #     response
+    # end
+
+    def self.create_new_user_playlist(access_token, spotify_id, name)
+        require 'uri'
+        require 'net/http'
+
+        string = "https://api.spotify.com/v1/users/" + spotify_id + "/playlists"
+        url = URI(string)
+
+        http = Net::HTTP.new(url.host, url.port)
+        http.use_ssl = true
+
+        request = Net::HTTP::Post.new(url)
+        request["Authorization"] = "Bearer #{access_token}"        
+        request["Content-Type"] = 'application/json'
+        # request["User-Agent"] = 'PostmanRuntime/7.16.3'
+        # request["Accept"] = '*/*'
+        # request["Cache-Control"] = 'no-cache'
+        # request["Postman-Token"] = '136bc693-3443-4d1b-a6b0-e9aa53388df2,15b22342-4829-49ac-978a-7c33ceea8848'
+        request["Host"] = 'api.spotify.com'
+        request["Accept-Encoding"] = 'gzip, deflate'
+        request["Content-Length"] = '40'
+        # request["Cookie"] = 'sp_ab=%7B%7D; sp_t=43c8692abd99f7abcab87cee9b998f7f'
+        request["Connection"] = 'keep-alive'
+        request["cache-control"] = 'no-cache'
+        request.body = "{\"name\":\"#{name}\", \"public\":true}"
+        byebug
+        response = http.request(request)
+        puts response.read_body
+    end
+
 end

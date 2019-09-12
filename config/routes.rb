@@ -31,6 +31,8 @@ Rails.application.routes.draw do
 
       # resources :playlists
       get 'userPlaylists', to: "playlists#user_playlists"
+    
+      post 'createNewPlaylist/:name' , to: "playlists#make_new_playlist"
 
       # get 'recent_tracks', to: "users#recent_tracks"
       resources :songs

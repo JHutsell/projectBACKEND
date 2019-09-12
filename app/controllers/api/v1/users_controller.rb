@@ -7,15 +7,16 @@ class Api::V1::UsersController < ApplicationController
         # byebug 
         
         user = User.find_or_create_by(user_params(user_data))
+        spotify_id = user_data["id"]
         img_url = user_data["images"][0] ? user_data["images"][0]["url"] : nil
         
-        recent_tracks = SpotifyApiAdapter.get_recently_played_tracks(auth_params["access_token"])
-        top_artists = SpotifyApiAdapter.get_user_top_artists(auth_params["access_token"])
-        playlists = SpotifyApiAdapter.get_user_playlists(auth_params["access_token"])
+        # recent_tracks = SpotifyApiAdapter.get_recently_played_tracks(auth_params["access_token"])
+        # top_artists = SpotifyApiAdapter.get_user_top_artists(auth_params["access_token"])
+        # playlists = SpotifyApiAdapter.get_user_playlists(auth_params["access_token"])
         # current_song = SpotifyApiAdapter.get_user_currently_playing(auth_params["access_token"])
         # reccos = SpotifyApiAdapter.get_user_reccomendations(auth_params["access_token"])
         
-        # byebug
+        
         #encodedAccess = issue_token({token: auth_params["access_token"]})
         #encodedRefresh = issue_token({token: auth_params["refresh_token"]})
         
@@ -23,17 +24,9 @@ class Api::V1::UsersController < ApplicationController
         token = issue_token(payload)
         
         
-        user.update(profile_img_url: img_url, access_token: auth_params["access_token"], refresh_token: auth_params["refresh_token"])
+        user.update(spotify_id: spotify_id, profile_img_url: img_url, access_token: auth_params["access_token"], refresh_token: auth_params["refresh_token"])
         # byebug
-        render json: {recent_tracks: recent_tracks, top_artists: top_artists, playlists: playlists, auth_response_json: auth_response_json(user, token)}
-        # if user.valid?
-        #     # render json: auth_response_json(user, token) # see application_controller.rb
-        # else
-        #     render json: { errors: user.errors.full_messages }
-        # end 
-        # byebug
-
-        # render json: user.to_json(:except => [:access_token, :refresh_token, :created_at, :updated_at])
+        render json: {auth_response_json: auth_response_json(user, token)}
     end
 
     def index
