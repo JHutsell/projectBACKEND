@@ -172,7 +172,6 @@ class SpotifyApiAdapter
         request["Connection"] = 'keep-alive'
         request["cache-control"] = 'no-cache'
         request.body = "{\"name\":\"#{name}\", \"public\":true}"
-        byebug
         response = http.request(request)
         puts response.read_body
     end

@@ -11,7 +11,6 @@ class Api::V1::PlaylistsController < ApplicationController
     end
 
     def make_new_playlist
-        byebug
         playlist_data = SpotifyApiAdapter.create_new_user_playlist(current_user.access_token, current_user.spotify_id, params[:name])
         render json: playlist_data
     end
