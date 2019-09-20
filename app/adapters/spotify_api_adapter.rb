@@ -42,7 +42,6 @@ class SpotifyApiAdapter
     end
 
     def self.get_recently_played_tracks(access_token)
-
         # user.refresh_access_token
 
         header = {
@@ -102,8 +101,6 @@ class SpotifyApiAdapter
             "Authorization": "Bearer #{access_token}"
         }
 
-        # "https://api.spotify.com/v1/search?q=abba&type=track&market=US"
-
         searched = urls["search"] + term + "&type=track"
         song = RestClient.get(searched, header)
         response = JSON.parse(song.body)
@@ -116,37 +113,18 @@ class SpotifyApiAdapter
 
         string = "https://api.spotify.com/v1/playlists/" + playlist_id + "/tracks?uris=spotify%3Atrack%3A" + song_uri
         url = URI(string)
-        # byebug
         http = Net::HTTP.new(url.host, url.port)
         http.use_ssl = true
         
         request = Net::HTTP::Post.new(url)
         request["Authorization"] = "Bearer #{access_token}"
         request["Accept"] = 'application/json'
-        # request["User-Agent"] = 'PostmanRuntime/7.16.3'
-        # request["Cache-Control"] = 'no-cache'
-        # request["Postman-Token"] = '617fcab3-bb41-485f-af3d-be890bd10c3c,4794609a-d835-4f31-a576-1a0eebc7777e'
         request["Host"] = 'api.spotify.com'
         request["Accept-Encoding"] = 'gzip, deflate'
-        # request["Cookie"] = 'sp_ab=%7B%7D; sp_t=43c8692abd99f7abcab87cee9b998f7f'
-        # request["Content-Length"] = ''
-        # request["Connection"] = 'keep-alive'
-        # request["cache-control"] = 'no-cache'
         
         response = http.request(request)
         puts response.read_body
     end
-
-    # def self.create_new_user_playlist(access_token, user_id, payload)
-    #     header = {
-    #         "Authorization": "Bearer #{access_token}"
-    #     }
-
-    #     url = `https://api.spotify.com/v1/users/#{user_id}/playlists`
-    #     playlist = RestClient.post(url, payload, header)
-    #     response = JSON.parse(playlist.body)
-    #     response
-    # end
 
     def self.create_new_user_playlist(access_token, spotify_id, name)
         require 'uri'
@@ -161,14 +139,9 @@ class SpotifyApiAdapter
         request = Net::HTTP::Post.new(url)
         request["Authorization"] = "Bearer #{access_token}"        
         request["Content-Type"] = 'application/json'
-        # request["User-Agent"] = 'PostmanRuntime/7.16.3'
-        # request["Accept"] = '*/*'
-        # request["Cache-Control"] = 'no-cache'
-        # request["Postman-Token"] = '136bc693-3443-4d1b-a6b0-e9aa53388df2,15b22342-4829-49ac-978a-7c33ceea8848'
         request["Host"] = 'api.spotify.com'
         request["Accept-Encoding"] = 'gzip, deflate'
         request["Content-Length"] = '40'
-        # request["Cookie"] = 'sp_ab=%7B%7D; sp_t=43c8692abd99f7abcab87cee9b998f7f'
         request["Connection"] = 'keep-alive'
         request["cache-control"] = 'no-cache'
         request.body = "{\"name\":\"#{name}\", \"public\":true}"

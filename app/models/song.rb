@@ -6,7 +6,6 @@ class Song < ApplicationRecord
         assignment_hash = {
           name: json["name"],
           duration_ms: json["duration_ms"],
-        #   explicit: json["explicit"],
           spotify_url: json["external_urls"]["spotify"],
           href: json["href"],
           spotify_id: json["id"],

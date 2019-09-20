@@ -16,7 +16,3 @@ class Api::V1::SessionsController < ApplicationController
     end
 
   end
-
-
-  #"user-read-email" "user-read-private"
-  #"user-read-playback-state" "user-read-recently-played",
