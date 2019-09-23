@@ -1,4 +1,4 @@
-class Api::V1::SessionsController < ApplicationController
+class SessionsController < ApplicationController
 
   skip_before_action :authorized, only: [:create]
   

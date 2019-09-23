@@ -1,4 +1,4 @@
-class Api::V1::PlaylistsController < ApplicationController
+class PlaylistsController < ApplicationController
 
     def index 
         @playlists = current_user.playlists
