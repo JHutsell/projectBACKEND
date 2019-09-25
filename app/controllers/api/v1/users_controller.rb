@@ -1,10 +1,9 @@
-class UsersController < ApplicationController
+class Api::V1::UsersController < ApplicationController
     skip_before_action :authorized
 
     def create
         auth_params = SpotifyApiAdapter.login(params[:code])
         user_data = SpotifyApiAdapter.getUserData(auth_params["access_token"])
-        
         user = User.find_or_create_by(user_params(user_data))
         spotify_id = user_data["id"]
         img_url = user_data["images"][0] ? user_data["images"][0]["url"] : nil
