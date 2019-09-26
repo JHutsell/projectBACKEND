@@ -20,7 +20,6 @@ class ApplicationController < ActionController::API
         # pull jwt token out of request.headers (assumed to be in format: {Authorization: "Token token=xxx"})
         authenticate_or_request_with_http_token do |jwt_token, options|
             decoded_token = decode(jwt_token)
-            # byebug
             #if a decoded token is found, use it to return a user
             if decoded_token
                 user_id = decoded_token["user_id"]
@@ -34,7 +33,6 @@ class ApplicationController < ActionController::API
     end
 
     def authorized
-        # Respond with error message unless user is logged in
         render json: {error: "Access denied: not authorized."}, status: 401 unless logged_in?
     end
 
